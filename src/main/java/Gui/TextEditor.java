@@ -1,12 +1,14 @@
 package Gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.util.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.filechooser.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 public class TextEditor extends JFrame implements ActionListener{
 
@@ -15,7 +17,7 @@ public class TextEditor extends JFrame implements ActionListener{
     JLabel fontLabel;
     JSpinner fontSizeSpinner;
     JButton fontColorButton;
-    JComboBox fontBox;
+    JComboBox<String> fontBox;
 
     JMenuBar menuBar;
     JMenu fileMenu;
@@ -44,22 +46,14 @@ public class TextEditor extends JFrame implements ActionListener{
         fontSizeSpinner = new JSpinner();
         fontSizeSpinner.setPreferredSize(new Dimension(50,25));
         fontSizeSpinner.setValue(20);
-        fontSizeSpinner.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-
-                textArea.setFont(new Font(textArea.getFont().getFamily(),Font.PLAIN,(int) fontSizeSpinner.getValue()));
-            }
-
-        });
+        fontSizeSpinner.addChangeListener(e -> textArea.setFont(new Font(textArea.getFont().getFamily(),Font.PLAIN,(int) fontSizeSpinner.getValue())));
 
         fontColorButton = new JButton("Color");
         fontColorButton.addActionListener(this);
 
         String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 
-        fontBox = new JComboBox(fonts);
+        fontBox = new JComboBox<>(fonts);
         fontBox.addActionListener(this);
         fontBox.setSelectedItem("Arial");
 
@@ -95,9 +89,8 @@ public class TextEditor extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
 
         if(e.getSource()==fontColorButton) {
-            JColorChooser colorChooser = new JColorChooser();
 
-            Color color = colorChooser.showDialog(null, "Choose a color", Color.black);
+            Color color = JColorChooser.showDialog(null, "Choose a color", Color.black);
 
             textArea.setForeground(color);
         }
@@ -116,22 +109,17 @@ public class TextEditor extends JFrame implements ActionListener{
 
             if(response == JFileChooser.APPROVE_OPTION) {
                 File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                Scanner fileIn = null;
 
-                try {
-                    fileIn = new Scanner(file);
-                    if(file.isFile()) {
-                        while(fileIn.hasNextLine()) {
-                            String line = fileIn.nextLine()+"\n";
+                try (Scanner fileIn = new Scanner(file)) {
+                    if (file.isFile()) {
+                        while (fileIn.hasNextLine()) {
+                            String line = fileIn.nextLine() + "\n";
                             textArea.append(line);
                         }
                     }
                 } catch (FileNotFoundException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
-                }
-                finally {
-                    fileIn.close();
                 }
             }
         }
@@ -143,19 +131,13 @@ public class TextEditor extends JFrame implements ActionListener{
 
             if(response == JFileChooser.APPROVE_OPTION) {
                 File file;
-                PrintWriter fileOut = null;
 
                 file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                try {
-                    fileOut = new PrintWriter(file);
+                try (PrintWriter fileOut = new PrintWriter(file)) {
                     fileOut.println(textArea.getText());
-                }
-                catch (FileNotFoundException e1) {
+                } catch (FileNotFoundException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
-                }
-                finally {
-                    fileOut.close();
                 }
             }
         }

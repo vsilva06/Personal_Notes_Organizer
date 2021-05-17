@@ -11,6 +11,7 @@ public class Gui extends JFrame {
         setSize(600, 600);
         setLocationRelativeTo(null);
         ImageIcon image = new ImageIcon("src/main/resources/Logo/Logo.png");
+        setIconImage(image.getImage());
         iniciarComponentes();
         setVisible(true);
 
