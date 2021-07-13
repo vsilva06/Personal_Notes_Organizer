@@ -1,36 +1,58 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.MouseAdapter;
 
 public class Principal extends JFrame implements ActionListener {
     private JPanel principal;
+    private JTree tree1;
     private JMenuBar menuBar1;
     private JMenu opcionesMenu;
     private JMenuItem guardar, nuevaCarpeta, guardarComo, nuevaNota;
-    private JTree tree1;
 
     public Principal() {
         ImageIcon logo = new ImageIcon("src/main/resources/Logo/Logo.png");
         this.setTitle("PNO");
         this.add(principal);
         setSize(400, 500);
-        agregarMenuItem();
+        agregarMenu();
         setLocationRelativeTo(null);
         this.setIconImage(logo.getImage());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setResizable(false);
+        // setResizable(false);
         pack();
         setVisible(true);
+
     }
 
-    private void agregarMenuItem() {
+    private void agregarMenu() {
+        menuBar1 = new JMenuBar();
+        setJMenuBar(menuBar1);
+
+        opcionesMenu = new JMenu("Opciones");
+        menuBar1.add(opcionesMenu);
+
         guardar = new JMenuItem("Guardar");
-        nuevaCarpeta = new JMenuItem("Nueva carpeta");
+        guardar.addActionListener(this);
+        opcionesMenu.add(guardar);
+
         guardarComo = new JMenuItem("Guardar como");
+        guardarComo.addActionListener(this);
+        opcionesMenu.add(guardarComo);
+
+        nuevaCarpeta = new JMenuItem("Nueva carpeta");
+        nuevaCarpeta.addActionListener(this);
+        opcionesMenu.add(nuevaCarpeta);
+
         nuevaNota = new JMenuItem("Nueva nota");
+        nuevaNota.addActionListener(this);
+        opcionesMenu.add(nuevaNota);
+
     }
 
     @Override
@@ -56,19 +78,10 @@ public class Principal extends JFrame implements ActionListener {
         principal = new JPanel();
         principal.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         principal.setPreferredSize(new Dimension(400, 500));
-        menuBar1 = new JMenuBar();
-        menuBar1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-        principal.add(menuBar1, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        opcionesMenu = new JMenu();
-        opcionesMenu.setText("Opciones");
-        menuBar1.add(opcionesMenu, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
-        menuBar1.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        principal.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
-        principal.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        tree1 = new JTree();
-        tree1.putClientProperty("JTree.lineStyle", "");
-        principal.add(tree1, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        principal.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**
@@ -77,4 +90,6 @@ public class Principal extends JFrame implements ActionListener {
     public JComponent $$$getRootComponent$$$() {
         return principal;
     }
+
+
 }
