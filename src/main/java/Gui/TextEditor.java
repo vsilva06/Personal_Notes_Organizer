@@ -1,4 +1,6 @@
-package Gui;
+package GUI;
+
+import org.w3c.dom.Text;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -26,7 +28,7 @@ public class TextEditor extends JFrame implements ActionListener{
     JMenuItem exitItem;
 
     public TextEditor(){
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setTitle("PNO Editor de Texto");
         this.setSize(500, 500);
         this.setLayout(new FlowLayout());
@@ -82,8 +84,26 @@ public class TextEditor extends JFrame implements ActionListener{
         this.add(fontColorButton);
         this.add(fontBox);
         this.add(scrollPane);
-        this.setVisible(true);
+
     }
+
+    public void abrirArchivo(File file){
+            textArea.setText("");
+            try (Scanner fileIn = new Scanner(file)) {
+                if (file.isFile()) {
+                    while (fileIn.hasNextLine()) {
+                        String line = fileIn.nextLine() + "\n";
+                        textArea.append(line);
+                        this.setVisible(true);
+                    }
+                }
+            } catch (FileNotFoundException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -101,7 +121,7 @@ public class TextEditor extends JFrame implements ActionListener{
 
         if(e.getSource()==openItem) {
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(new File("."));
+            fileChooser.setCurrentDirectory(new File("src/main/resources/Personal Notes Organizer"));
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt");
             fileChooser.setFileFilter(filter);
 
@@ -125,7 +145,7 @@ public class TextEditor extends JFrame implements ActionListener{
         }
         if(e.getSource()==saveItem) {
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(new File("."));
+            fileChooser.setCurrentDirectory(new File("src/main/resources/Personal Notes Organizer"));
 
             int response = fileChooser.showSaveDialog(null);
 
@@ -144,5 +164,6 @@ public class TextEditor extends JFrame implements ActionListener{
         if(e.getSource()==exitItem) {
             System.exit(0);
         }
+
     }
 }
