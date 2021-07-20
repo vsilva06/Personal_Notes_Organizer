@@ -67,7 +67,7 @@ public class Principal extends JFrame implements ActionListener {
         tree1.setModel(new FileSystemModel(new File("src/main/resources/Personal Notes Organizer")));
 
         gestorArchivos = new GestorArchivos();
-        textEditor = new TextEditor();
+
 
 
     }
@@ -75,70 +75,51 @@ public class Principal extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        String path = validarPath();
+        System.out.println(path);
+        textEditor = new TextEditor(path);
 
         if (e.getSource() == nuevaNota) {
-
-            if (String.valueOf(tree1.getSelectionPath().getLastPathComponent()).equals("src\\main\\resources\\Personal Notes Organizer")) {
-                gestorArchivos.crearArchivo(String.valueOf(tree1.getSelectionPath().getLastPathComponent() + "\\" + text.getText()));
-                this.tree1.updateUI();
-                this.text.setText("");
-            } else {
-                try {
-                    File file = new File(tree1.getSelectionPath().getParentPath().getLastPathComponent() + "\\" + tree1.getSelectionPath().getLastPathComponent());
-                    if (!file.isFile()) {
-                        gestorArchivos.crearArchivo(file.getPath() + "\\" + text.getText());
-                        this.tree1.updateUI();
-                        this.text.setText("");
-                    }
-
-
-                } catch (NullPointerException e1) {
-
+            try {
+                File file = new File(path);
+                if (!file.isFile()) {
+                    gestorArchivos.crearArchivo(file.getPath() + "\\" + text.getText());
+                    this.tree1.updateUI();
+                    this.text.setText("");
                 }
+
+
+            } catch (NullPointerException e1) {
+
             }
 
 
         }
         if (e.getSource() == abrirButton) {
-
-            try {
-                File file = new File(tree1.getSelectionPath().getParentPath().getLastPathComponent() + "\\" + tree1.getSelectionPath().getLastPathComponent());
-
-                if (file.isFile()) {
-
-                    textEditor.abrirArchivo(file);
-
-                }
-            } catch (NullPointerException e1) {
-
-            }
+            textEditor.abrirArchivo();
         }
+
+
         if (e.getSource() == nuevaCarpeta) {
 
-            if (String.valueOf(tree1.getSelectionPath().getLastPathComponent()).equals("src\\main\\resources\\Personal Notes Organizer")) {
-                gestorArchivos.crearDirectorio(String.valueOf(tree1.getSelectionPath().getLastPathComponent() + "\\" + text.getText()));
-                this.tree1.updateUI();
-                this.text.setText("");
-            } else {
-                try {
-                    File file = new File(tree1.getSelectionPath().getParentPath().getLastPathComponent() + "\\" + tree1.getSelectionPath().getLastPathComponent());
+            try {
+                File file = new File(path);
 
-                    if (!file.isFile()) {
-                        gestorArchivos.crearDirectorio(file.getPath() + "\\" + text.getText());
-                        this.tree1.updateUI();
-                        this.text.setText("");
-                    }
-                } catch (NullPointerException e1) {
+                if (!file.isFile()) {
+                    gestorArchivos.crearDirectorio(file.getPath() + "\\" + text.getText());
+                    this.tree1.updateUI();
                     this.text.setText("");
                 }
-
+            } catch (NullPointerException e1) {
+                this.text.setText("");
             }
+
+
         }
 
         if (e.getSource() == eliminarNota) {
             try {
-                File file = new File(tree1.getSelectionPath().getParentPath().getLastPathComponent() + "\\" + tree1.getSelectionPath().getLastPathComponent());
+                File file = new File(path);
 
                 if (file.isFile()) {
                     gestorArchivos.eliminarArchivos(file.getPath());
@@ -146,11 +127,41 @@ public class Principal extends JFrame implements ActionListener {
 
                 }
             } catch (NullPointerException e1) {
-                System.err.println("No se puede abrir un directorio");
+
             }
 
         }
 
+    }
+
+    private String validarPath() {
+        var path = String.valueOf(tree1.getAnchorSelectionPath());
+        String aux = path.substring(path.indexOf(",") + 2);
+
+
+        if (path.contains("]")) {
+            path = path.substring(0, path.indexOf("]"));
+            aux = aux.substring(0, aux.indexOf("]"));
+        }
+
+        if (path.contains("[")) {
+            path = path.replace("[", "");
+        }
+        if (path.contains(",")) {
+            path = path.substring(0, path.indexOf(","));
+
+        }
+        if (aux.contains(",")) {
+            aux = aux.substring(0, aux.indexOf(",")) + "\\" + aux.substring(aux.indexOf(",") + 2);
+        }
+
+        if (path.equals(aux)) {
+            return path;
+        } else {
+            path = path + "\\" + aux;
+        }
+
+        return path;
     }
 
 
