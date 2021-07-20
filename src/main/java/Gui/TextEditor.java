@@ -1,7 +1,5 @@
 package GUI;
 
-import org.w3c.dom.Text;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -23,13 +21,17 @@ public class TextEditor extends JFrame implements ActionListener{
 
     JMenuBar menuBar;
     JMenu fileMenu;
-    JMenuItem openItem;
-    JMenuItem saveItem;
-    JMenuItem exitItem;
+    JMenuItem abrirItem;
+    JMenuItem guardarItem;
+    JMenuItem salirItem;
+    private String path;
 
-    public TextEditor(){
+    public TextEditor(String path){
+        this.path = path;
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setTitle("PNO Editor de Texto");
+        ImageIcon logo = new ImageIcon("src/main/resources/Logo/Logo.png");
+        this.setIconImage(logo.getImage());
         this.setSize(500, 500);
         this.setLayout(new FlowLayout());
         this.setLocationRelativeTo(null);
@@ -62,18 +64,19 @@ public class TextEditor extends JFrame implements ActionListener{
         // ------ menubar ------
 
         menuBar = new JMenuBar();
-        fileMenu = new JMenu("File");
-        openItem = new JMenuItem("Open");
-        saveItem = new JMenuItem("Save");
-        exitItem = new JMenuItem("Exit");
+        fileMenu = new JMenu("Archivo");
+        abrirItem = new JMenuItem("Abrir");
+        abrirItem.setVisible(false);
+        guardarItem = new JMenuItem("Guardar");
+        salirItem = new JMenuItem("Salir");
 
-        openItem.addActionListener(this);
-        saveItem.addActionListener(this);
-        exitItem.addActionListener(this);
+        abrirItem.addActionListener(this);
+        guardarItem.addActionListener(this);
+        salirItem.addActionListener(this);
 
-        fileMenu.add(openItem);
-        fileMenu.add(saveItem);
-        fileMenu.add(exitItem);
+        fileMenu.add(abrirItem);
+        fileMenu.add(guardarItem);
+        fileMenu.add(salirItem);
         menuBar.add(fileMenu);
 
         // ------ /menubar ------
@@ -87,10 +90,11 @@ public class TextEditor extends JFrame implements ActionListener{
 
     }
 
-    public void abrirArchivo(File file){
+    public void abrirArchivo(){
+            File file = new File(path);
             textArea.setText("");
             try (Scanner fileIn = new Scanner(file)) {
-                if (file.isFile()) {
+                if (file.isFile() || file.getPath().contains(".txt")) {
                     while (fileIn.hasNextLine()) {
                         String line = fileIn.nextLine() + "\n";
                         textArea.append(line);
@@ -99,7 +103,7 @@ public class TextEditor extends JFrame implements ActionListener{
                 }
             } catch (FileNotFoundException e1) {
                 // TODO Auto-generated catch block
-                e1.printStackTrace();
+                System.err.println("No se puede leer el archivo");
             }
 
     }
@@ -119,7 +123,7 @@ public class TextEditor extends JFrame implements ActionListener{
             textArea.setFont(new Font((String)fontBox.getSelectedItem(),Font.PLAIN,textArea.getFont().getSize()));
         }
 
-        if(e.getSource()==openItem) {
+        if(e.getSource()==abrirItem) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File("src/main/resources/Personal Notes Organizer"));
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt");
@@ -143,25 +147,17 @@ public class TextEditor extends JFrame implements ActionListener{
                 }
             }
         }
-        if(e.getSource()==saveItem) {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(new File("src/main/resources/Personal Notes Organizer"));
+        if(e.getSource()==guardarItem) {
 
-            int response = fileChooser.showSaveDialog(null);
+            File file = new File(path);
+            try(PrintWriter fileOut = new PrintWriter(file)){
+                fileOut.println(textArea.getText());
+            }catch (FileNotFoundException e1){
 
-            if(response == JFileChooser.APPROVE_OPTION) {
-                File file;
-
-                file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                try (PrintWriter fileOut = new PrintWriter(file)) {
-                    fileOut.println(textArea.getText());
-                } catch (FileNotFoundException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
             }
+
         }
-        if(e.getSource()==exitItem) {
+        if(e.getSource()==salirItem) {
             System.exit(0);
         }
 

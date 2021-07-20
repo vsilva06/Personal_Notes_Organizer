@@ -1,12 +1,8 @@
 package Datos;
-
-import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Vector;
-import java.util.stream.Stream;
 
 public class GestorArchivos {
     public GestorArchivos() {
@@ -41,7 +37,7 @@ public class GestorArchivos {
             fw = new FileWriter(file.getAbsoluteFile(), true);
             bw = new BufferedWriter(fw);
 
-            bw.write("");
+            bw.write(" ");
 
         } catch (Exception e) {
             //e.printStackTrace();

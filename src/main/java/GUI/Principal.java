@@ -76,7 +76,6 @@ public class Principal extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String path = validarPath();
-        System.out.println(path);
         textEditor = new TextEditor(path);
 
         if (e.getSource() == nuevaNota) {
