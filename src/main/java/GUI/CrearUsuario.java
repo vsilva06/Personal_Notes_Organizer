@@ -1,5 +1,6 @@
 package GUI;
 
+import Estructura.Login;
 import Estructura.User;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ public class CrearUsuario extends JFrame implements ActionListener {
     private JTextField textField1;
     private JPasswordField passwordField1;
     private JButton aceptar;
-    private User user;
+    private Login user;
 
     public CrearUsuario(){
         ImageIcon logo = new ImageIcon("src/main/resources/Logo/Logo.png");
@@ -20,7 +21,6 @@ public class CrearUsuario extends JFrame implements ActionListener {
         setSize(400, 500);
         setLocationRelativeTo(null);
         this.setIconImage(logo.getImage());
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         pack();
         setVisible(true);
@@ -33,6 +33,8 @@ public class CrearUsuario extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(aceptar.isDefaultButton()){
 
+        }
     }
 }
