@@ -2,7 +2,7 @@ package Estructura;
 
 public class Login {
 
-    private static final String path = "usuarios/usuarios.txt";
+    private static final String path = "Usuarios/usuarios.txt";
 
     public boolean login(String usuario, String password){
         String contenido = new GestorCuentas().verArchivo(path);

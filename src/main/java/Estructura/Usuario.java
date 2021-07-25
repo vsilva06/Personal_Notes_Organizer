@@ -4,7 +4,7 @@ public class Usuario {
 
     private static final GestorCuentas gestor = new GestorCuentas();
     private boolean revisarExistencia(String usuario){
-        String ruta = "/usuarios/usuarios.txt";
+        String ruta = "/src/main/resources/Usuarios/usuarios.txt";
         String[] credenciales = gestor.verArchivo(ruta).split("\n");
         for(String credencial : credenciales){
             if (credencial.split(" ")[0].equals(usuario)) {
@@ -13,12 +13,13 @@ public class Usuario {
         }
         return false;
     }
-    public boolean crearUsuario(String usuario, String password){
+    public boolean crearCuenta(String usuario, String password){
         if(revisarExistencia(usuario)){
             return false;
         }
-        crearEntradaUsuarios(usuario, password);
+        //crearEntradaUsuarios(usuario, password);
         if(crearDirectorioUsuario(usuario) && crearArchivoBienvenida(usuario)){
+            crearEntradaUsuarios(usuario, password);
             System.out.println("Usuario creado exitosamente");
             return true;
         }
@@ -28,16 +29,16 @@ public class Usuario {
 
     }
     private boolean crearDirectorioUsuario(String usuario){
-        String path = "notas/"+usuario;
+        String path = "src/main/resources/Usuarios/"+usuario;
         return gestor.crearDirectorio(path);
     }
     private boolean crearArchivoBienvenida(String usuario){
-        String path = "notas/"+usuario+"/bienvenida.txt";
+        String path = "src/main/resources/Usuarios/"+usuario+"/bienvenida.txt";
         String mensaje = "Bienvenido "+usuario+"! \n Este es tu nuevo Personal Note Organizer!";
         return gestor.crearArchivo(path, mensaje);
     }
     private void crearEntradaUsuarios(String usuario, String password){
-        String path = "usuarios/usuarios.txt";
+        String path = "Usuarios/usuarios.txt";
         String entrada = usuario+" "+password+" ;";
         gestor.editar(path, entrada);
     }

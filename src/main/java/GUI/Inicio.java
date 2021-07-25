@@ -1,5 +1,8 @@
 package GUI;
 
+import Estructura.GestorCuentas;
+import Estructura.Login;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -13,7 +16,7 @@ public class Inicio extends JFrame implements ActionListener {
     private JButton iniciarSinUsuarioButton;
     private JButton olvidasteTuContraseñaButton;
     private JButton entrarButton;
-    private CrearUsuario cu;
+    private static final GestorCuentas gc = new GestorCuentas();
 
     public Inicio() {
         ImageIcon logo = new ImageIcon("src/main/resources/Logo/Logo.png");
@@ -27,16 +30,26 @@ public class Inicio extends JFrame implements ActionListener {
         setVisible(true);
         // setResizable(false);         pack();         setVisible(true);
         añadirButton();
+        String path = "src/main/resources/Usuarios/";
+        String users = gc.verArchivo(path);
+        //comboBox1.add(users, );
+
     }
+
+
 
     private void añadirButton() {
         crearUsuarioButton.addActionListener(this);
+        entrarButton.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==crearUsuarioButton){
-            cu = new CrearUsuario();
+            CrearUsuario cu = new CrearUsuario();
+        }else if(e.getSource()==entrarButton){
+            Login log = new Login();
+            log.login(comboBox1.getSelectedItem().toString(), passwordField1.getText());
         }
     }
     

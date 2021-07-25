@@ -7,27 +7,33 @@ import java.nio.file.Paths;
 
 public class GestorCuentas {
 
-        public void crearDirectorio(String ruta) {
+        public boolean crearDirectorio(String ruta) {
             Path directorio = Paths.get(ruta);
             if (Files.exists(directorio)) {
                 System.out.println("El directorio ya existe");
+                return false;
             } else {
                 try {
                     Files.createDirectories(directorio);
                     System.out.println("El directorio fue creado");
+                    return true;
                 } catch (IOException e) {
                     System.out.println("El directorio no fue creado");
+                    return false;
                 }
             }
+
         }
 
-        public void crearArchivo(String ruta, String texto) {
+        public boolean crearArchivo(String ruta, String texto) {
             Path archivo = Paths.get(ruta);
             try {
                 Files.write(archivo, texto.getBytes());
                 System.out.println("Se ha guardado en el archivo");
+                return true;
             } catch (IOException e) {
                 System.out.println("El archivo no puede ser guardado");
+                return false;
             }
         }
 
@@ -48,4 +54,3 @@ public class GestorCuentas {
             crearArchivo(ruta, texto1+texto);
         }
     }
-}
