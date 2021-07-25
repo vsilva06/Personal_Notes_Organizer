@@ -7,22 +7,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 
 
-public class Principal extends JFrame implements ActionListener {
+public class Principal extends JFrame implements ActionListener, MouseListener {
     private JPanel principal;
     private JTree tree1;
-    private JTextArea text;
-    private JButton abrirButton;
     private JMenuBar menuBar1;
     private JMenu opcionesMenu;
     private JMenuItem nuevaCarpeta, eliminarCarpeta, nuevaNota, eliminarNota;
     private TextEditor textEditor;
     private GestorArchivos gestorArchivos;
+    private String ruta;
 
 
-    public Principal() {
+    public Principal(String s) {
+        this.ruta = "src/main/resources/Usuarios/" + s.strip();
         ImageIcon logo = new ImageIcon("src/main/resources/Logo/Logo.png");
         $$$setupUI$$$();
         this.setTitle("PNO");
@@ -62,12 +64,11 @@ public class Principal extends JFrame implements ActionListener {
         eliminarNota.addActionListener(this);
         opcionesMenu.add(eliminarNota);
 
-        abrirButton.addActionListener(this);
 
-        tree1.setModel(new FileSystemModel(new File("src/main/resources/Personal Notes Organizer")));
+        tree1.setModel(new FileSystemModel(new File(ruta)));
+        tree1.addMouseListener(this);
 
         gestorArchivos = new GestorArchivos();
-
 
 
     }
@@ -76,26 +77,23 @@ public class Principal extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String path = validarPath();
-        textEditor = new TextEditor(path);
 
         if (e.getSource() == nuevaNota) {
             try {
                 File file = new File(path);
                 if (!file.isFile()) {
-                    gestorArchivos.crearArchivo(file.getPath() + "\\" + text.getText());
+                    String mensaje = JOptionPane.showInputDialog("Nombre nota");
+
+                    gestorArchivos.crearArchivo(file.getPath() + "\\" + mensaje);
                     this.tree1.updateUI();
-                    this.text.setText("");
                 }
 
 
             } catch (NullPointerException e1) {
-
+                System.err.println("Error al crear la nota");
             }
 
 
-        }
-        if (e.getSource() == abrirButton) {
-            textEditor.abrirArchivo();
         }
 
 
@@ -105,12 +103,12 @@ public class Principal extends JFrame implements ActionListener {
                 File file = new File(path);
 
                 if (!file.isFile()) {
-                    gestorArchivos.crearDirectorio(file.getPath() + "\\" + text.getText());
+                    String mensaje = JOptionPane.showInputDialog("Nombre Carpeta");
+                    gestorArchivos.crearDirectorio(file.getPath() + "\\" + mensaje);
                     this.tree1.updateUI();
-                    this.text.setText("");
                 }
             } catch (NullPointerException e1) {
-                this.text.setText("");
+                System.err.println("Error al crear la carpeta");
             }
 
 
@@ -126,7 +124,21 @@ public class Principal extends JFrame implements ActionListener {
 
                 }
             } catch (NullPointerException e1) {
+                System.err.println("No se puede eliminar la nota");
+            }
 
+
+        }
+        if (e.getSource() == eliminarCarpeta) {
+            try {
+                File file = new File(path);
+
+                if (file.isDirectory() || path.equals(ruta)) {
+                    gestorArchivos.eliminarCarpeta(file.getPath());
+                    this.tree1.updateUI();
+                }
+            } catch (NullPointerException e1) {
+                System.err.println("Error al eliminar la carpeta");
             }
 
         }
@@ -173,24 +185,15 @@ public class Principal extends JFrame implements ActionListener {
      */
     private void $$$setupUI$$$() {
         principal = new JPanel();
-        principal.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 5, new Insets(0, 0, 0, 0), -1, -1));
+        principal.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 5, new Insets(0, 0, 0, 0), -1, -1));
         principal.setOpaque(true);
         principal.setPreferredSize(new Dimension(400, 500));
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
         principal.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(0, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
-        principal.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        principal.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         tree1 = new JTree();
-        principal.add(tree1, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 2, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(100, 10), null, 0, false));
-        text = new JTextArea();
-        principal.add(text, new com.intellij.uiDesigner.core.GridConstraints(1, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(150, 25), null, 0, false));
-        abrirButton = new JButton();
-        abrirButton.setText("Abrir");
-        principal.add(abrirButton, new com.intellij.uiDesigner.core.GridConstraints(1, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
-        principal.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        final com.intellij.uiDesigner.core.Spacer spacer4 = new com.intellij.uiDesigner.core.Spacer();
-        principal.add(spacer4, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        principal.add(tree1, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 2, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(100, 10), null, 0, false));
     }
 
     /**
@@ -204,4 +207,38 @@ public class Principal extends JFrame implements ActionListener {
     private void createUIComponents() {
         // TODO: place custom component creation code here
     }
+
+    /**
+     * Invoked when the mouse button has been clicked (pressed
+     * and released) on a component.
+     *
+     * @param e the event to be processed
+     */
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        String path = validarPath();
+        File file = new File(path);
+        if (file.isFile()) {
+            textEditor = new TextEditor(path);
+            textEditor.abrirArchivo();
+        }
+
+    }
+
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    public void mouseExited(MouseEvent e) {
+
+    }
+
 }

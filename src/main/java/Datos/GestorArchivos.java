@@ -1,4 +1,5 @@
 package Datos;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,7 +18,7 @@ public class GestorArchivos {
                 Files.createDirectories(directorio);
                 //se crea el directorio
             } catch (IOException e) {
-                System.out.println("El directorio no pudo ser creado");
+                System.err.println("El directorio no pudo ser creado");
             }
         }
     }
@@ -64,9 +65,21 @@ public class GestorArchivos {
             Files.deleteIfExists(archivo);
             //se elimina el archivo
         } catch (IOException e) {
-            System.out.println("El archivo no  pudo ser eliminado");
+            System.err.println("El archivo no  pudo ser eliminado");
         }
+    }
+
+    public void eliminarCarpeta(String donde) {
+        File carpeta = new File(donde);
+        File[] archivos = carpeta.listFiles();
+        for (int i = 0; i < archivos.length; i++) {
+            eliminarArchivos(archivos[i].getPath());
+        }
+        carpeta.delete();
     }
 
 
 }
+
+
+

@@ -1,6 +1,6 @@
 package Launcher;
 
-import GUI.GestorVentanas;
+import Datos.GestorVentanas;
 
 public class Main {
     public static void main(String[] args) {
