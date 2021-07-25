@@ -38,7 +38,7 @@ public class Usuario {
         return gestor.crearArchivo(path, mensaje);
     }
     private void crearEntradaUsuarios(String usuario, String password){
-        String path = "Usuarios/usuarios.txt";
+        String path = "src/main/resources/Usuarios/usuarios.txt";
         String entrada = usuario+" "+password+" ;";
         gestor.editar(path, entrada);
     }
