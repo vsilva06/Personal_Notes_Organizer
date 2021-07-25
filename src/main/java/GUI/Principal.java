@@ -2,6 +2,7 @@ package GUI;
 
 import Complementos.FileSystemModel;
 import Datos.GestorArchivos;
+import Datos.GestorVentanas;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,10 +18,11 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
     private JTree tree1;
     private JMenuBar menuBar1;
     private JMenu opcionesMenu;
-    private JMenuItem nuevaCarpeta, eliminarCarpeta, nuevaNota, eliminarNota;
+    private JMenuItem nuevaCarpeta, eliminarCarpeta, nuevaNota, eliminarNota, lCompra;
     private TextEditor textEditor;
     private GestorArchivos gestorArchivos;
     private String ruta;
+    private GestorVentanas gestorVentanas;
 
 
     public Principal(String s) {
@@ -37,6 +39,8 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         // setResizable(false);
         pack();
         setVisible(true);
+
+        gestorVentanas = new GestorVentanas();
 
 
     }
@@ -64,6 +68,10 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         eliminarNota.addActionListener(this);
         opcionesMenu.add(eliminarNota);
 
+        lCompra = new JMenuItem("Lista de compra");
+        lCompra.addActionListener(this);
+        opcionesMenu.add(lCompra);
+
 
         tree1.setModel(new FileSystemModel(new File(ruta)));
         tree1.addMouseListener(this);
@@ -79,21 +87,8 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         String path = validarPath();
 
         if (e.getSource() == nuevaNota) {
-            try {
-                File file = new File(path);
-                if (!file.isFile()) {
-                    String mensaje = JOptionPane.showInputDialog("Nombre nota");
-
-                    gestorArchivos.crearArchivo(file.getPath() + "\\" + mensaje);
-                    this.tree1.updateUI();
-                }
-
-
-            } catch (NullPointerException e1) {
-                System.err.println("Error al crear la nota");
-            }
-
-
+            nota(path);
+            this.tree1.updateUI();
         }
 
 
@@ -143,6 +138,31 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
 
         }
 
+        if (e.getSource() == lCompra) {
+            String n = nota(path);
+            String aux = "Producto" + " " + "Precio" + " ;";
+            gestorArchivos.editar(path + "\\" + n + ".txt", aux);
+            this.tree1.updateUI();
+
+        }
+
+    }
+
+    private String nota(String path) {
+        try {
+            File file = new File(path);
+            if (!file.isFile()) {
+                String mensaje = JOptionPane.showInputDialog("Nombre nota");
+                gestorArchivos.crearArchivo(file.getPath() + "\\" + mensaje);
+                return mensaje.toString();
+            }
+
+
+        } catch (NullPointerException e1) {
+            System.err.println("Error al crear la nota");
+        }
+
+        return path;
     }
 
     private String validarPath() {
@@ -219,10 +239,24 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         String path = validarPath();
         File file = new File(path);
         if (file.isFile()) {
-            textEditor = new TextEditor(path);
-            textEditor.abrirArchivo();
+            if (validarNota(file)) {
+                gestorVentanas.abrirListaCompra(path);
+
+            } else {
+                gestorVentanas.abrirTextEditor(path);
+            }
+
         }
 
+    }
+
+    private boolean validarNota(File file) {
+        String contenido = gestorArchivos.verArchivo(file.getPath());
+
+        if (contenido.contains("Precio") && contenido.contains("Producto")) {
+            return true;
+        }
+        return false;
     }
 
     public void mousePressed(MouseEvent e) {
