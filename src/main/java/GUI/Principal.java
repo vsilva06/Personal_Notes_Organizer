@@ -18,7 +18,7 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
     private JPanel principal;
     private JTree tree1;
     private JMenuBar menuBar1;
-    private JMenu opcionesMenu;
+    private JMenu opcionesMenu, opcionesNotas, opcionesCarpetas;
     private JMenuItem nuevaCarpeta, eliminarCarpeta, nuevaNota, eliminarNota, lCompra, cerrarSesion, eliminarUsuario;
     private GestorArchivos gestorArchivos;
     private String ruta;
@@ -54,25 +54,31 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         opcionesMenu = new JMenu("Opciones");
         menuBar1.add(opcionesMenu);
 
+        opcionesNotas = new JMenu("Nota");
+        menuBar1.add(opcionesNotas);
+
+        opcionesCarpetas = new JMenu("Carpeta");
+        menuBar1.add(opcionesCarpetas);
+
         nuevaCarpeta = new JMenuItem("Nueva carpeta");
         nuevaCarpeta.addActionListener(this);
-        opcionesMenu.add(nuevaCarpeta);
+        opcionesCarpetas.add(nuevaCarpeta);
 
         eliminarCarpeta = new JMenuItem("Eliminar carpeta");
         eliminarCarpeta.addActionListener(this);
-        opcionesMenu.add(eliminarCarpeta);
+        opcionesCarpetas.add(eliminarCarpeta);
 
         nuevaNota = new JMenuItem("Nueva nota");
         nuevaNota.addActionListener(this);
-        opcionesMenu.add(nuevaNota);
+        opcionesNotas.add(nuevaNota);
 
         eliminarNota = new JMenuItem("Eliminar nota");
         eliminarNota.addActionListener(this);
-        opcionesMenu.add(eliminarNota);
+        opcionesNotas.add(eliminarNota);
 
         lCompra = new JMenuItem("Lista de compra");
         lCompra.addActionListener(this);
-        opcionesMenu.add(lCompra);
+        opcionesNotas.add(lCompra);
 
         cerrarSesion = new JMenuItem("Cerrar Sesion");
         cerrarSesion.addActionListener(this);
