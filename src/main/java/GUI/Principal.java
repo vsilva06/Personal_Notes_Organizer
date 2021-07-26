@@ -17,15 +17,17 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
     private JPanel principal;
     private JTree tree1;
     private JMenuBar menuBar1;
-    private JMenu opcionesMenu;
-    private JMenuItem nuevaCarpeta, eliminarCarpeta, nuevaNota, eliminarNota, lCompra, cerrarSesion;
+    private JMenu opcionesMenu, opcionesNotas, opcionesCarpetas;
+    private JMenuItem nuevaCarpeta, eliminarCarpeta, nuevaNota, eliminarNota, lCompra, cerrarSesion, eliminarUsuario;
     private GestorArchivos gestorArchivos;
     private String ruta;
     private GestorVentanas gestorVentanas;
+    private String usuario;
 
 
-    public Principal(String s) {
-        this.ruta = "src/main/resources/Usuarios/" + s.strip();
+    public Principal(String usuario) {
+        this.usuario = usuario.strip();
+        this.ruta = "src/main/resources/Usuarios/" + usuario.strip();
         ImageIcon logo = new ImageIcon("src/main/resources/Logo/Logo.png");
         $$$setupUI$$$();
         this.setTitle("PNO");
@@ -35,7 +37,6 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         setLocationRelativeTo(null);
         this.setIconImage(logo.getImage());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        // setResizable(false);
         pack();
         setVisible(true);
 
@@ -51,29 +52,39 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         opcionesMenu = new JMenu("Opciones");
         menuBar1.add(opcionesMenu);
 
+        opcionesNotas = new JMenu("Nota");
+        menuBar1.add(opcionesNotas);
+
+        opcionesCarpetas = new JMenu("Carpeta");
+        menuBar1.add(opcionesCarpetas);
+
         nuevaCarpeta = new JMenuItem("Nueva carpeta");
         nuevaCarpeta.addActionListener(this);
-        opcionesMenu.add(nuevaCarpeta);
+        opcionesCarpetas.add(nuevaCarpeta);
 
         eliminarCarpeta = new JMenuItem("Eliminar carpeta");
         eliminarCarpeta.addActionListener(this);
-        opcionesMenu.add(eliminarCarpeta);
+        opcionesCarpetas.add(eliminarCarpeta);
 
         nuevaNota = new JMenuItem("Nueva nota");
         nuevaNota.addActionListener(this);
-        opcionesMenu.add(nuevaNota);
+        opcionesNotas.add(nuevaNota);
 
         eliminarNota = new JMenuItem("Eliminar nota");
         eliminarNota.addActionListener(this);
-        opcionesMenu.add(eliminarNota);
+        opcionesNotas.add(eliminarNota);
 
         lCompra = new JMenuItem("Lista de compra");
         lCompra.addActionListener(this);
-        opcionesMenu.add(lCompra);
+        opcionesNotas.add(lCompra);
 
         cerrarSesion = new JMenuItem("Cerrar Sesion");
         cerrarSesion.addActionListener(this);
         opcionesMenu.add(cerrarSesion);
+
+        eliminarUsuario = new JMenuItem("Eliminar usuario");
+        eliminarUsuario.addActionListener(this);
+        opcionesMenu.add(eliminarUsuario);
 
 
         tree1.setModel(new FileSystemModel(new File(ruta)));
@@ -90,6 +101,7 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         String path = validarPath();
 
         if (e.getSource() == nuevaNota) {
+            gestorArchivos.editar(nota(path), " ");
             this.tree1.updateUI();
         }
 
@@ -150,10 +162,21 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         if (e.getSource() == cerrarSesion) {
             gestorVentanas.ventanaInicio();
             this.setVisible(false);
+        }
 
+        if (e.getSource() == eliminarUsuario) {
+            int resp = JOptionPane.showConfirmDialog(null, "Esta seguro de eliminar el Usuario");
+            if (resp == 0) {
+                gestorArchivos.eliminarCarpeta(ruta);
+                gestorArchivos.borrarLinea(usuario, "src/main/resources/Usuarios/usuarios.txt");
+                JOptionPane.showMessageDialog(null, "Usuario eliminado");
+                gestorVentanas.ventanaInicio();
+                this.setVisible(false);
+            }
         }
 
     }
+
 
     private String nota(String path) {
         try {
@@ -189,16 +212,18 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
             path = path.substring(0, path.indexOf(","));
 
         }
-        if (aux.contains(",")) {
+        while (aux.contains(",")) {
             aux = aux.substring(0, aux.indexOf(",")) + "\\" + aux.substring(aux.indexOf(",") + 2);
         }
 
         if (path.equals(aux)) {
+            System.out.println(path);
             return path;
+
         } else {
             path = path + "\\" + aux;
         }
-
+        System.out.println(path);
         return path;
     }
 
