@@ -4,10 +4,10 @@ import Complementos.Calculadora;
 import Datos.GestorArchivos;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Arrays;
 
 public class ListaCompra extends JFrame implements KeyListener {
     private JTextField textProducto;
@@ -38,6 +38,7 @@ public class ListaCompra extends JFrame implements KeyListener {
         setVisible(true);
         this.gestorArchivos = new GestorArchivos();
         abrirArchivo();
+        precio.addListSelectionListener((ListSelectionListener) this);
 
 
     }
@@ -156,6 +157,7 @@ public class ListaCompra extends JFrame implements KeyListener {
             textProducto.setText("");
             abrirArchivo();
         }
+
     }
 
     @Override
