@@ -225,4 +225,8 @@ public class Inicio extends JFrame implements ActionListener, MouseListener {
     public void mouseExited(MouseEvent e) {
 
     }
+
+
 }
+
+
