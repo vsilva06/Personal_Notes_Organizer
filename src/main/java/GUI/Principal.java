@@ -3,6 +3,7 @@ package GUI;
 import Complementos.FileSystemModel;
 import Datos.GestorArchivos;
 import Datos.GestorVentanas;
+import Estructura.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,14 +19,16 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
     private JTree tree1;
     private JMenuBar menuBar1;
     private JMenu opcionesMenu;
-    private JMenuItem nuevaCarpeta, eliminarCarpeta, nuevaNota, eliminarNota, lCompra, cerrarSesion;
+    private JMenuItem nuevaCarpeta, eliminarCarpeta, nuevaNota, eliminarNota, lCompra, cerrarSesion, eliminarUsuario;
     private GestorArchivos gestorArchivos;
     private String ruta;
     private GestorVentanas gestorVentanas;
+    private String usuario;
 
 
-    public Principal(String s) {
-        this.ruta = "src/main/resources/Usuarios/" + s.strip();
+    public Principal(String usuario) {
+        this.usuario = usuario.strip();
+        this.ruta = "src/main/resources/Usuarios/" + usuario.strip();
         ImageIcon logo = new ImageIcon("src/main/resources/Logo/Logo.png");
         $$$setupUI$$$();
         this.setTitle("PNO");
@@ -75,6 +78,10 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         cerrarSesion.addActionListener(this);
         opcionesMenu.add(cerrarSesion);
 
+        eliminarUsuario = new JMenuItem("Eliminar usuario");
+        eliminarUsuario.addActionListener(this);
+        opcionesMenu.add(eliminarUsuario);
+
 
         tree1.setModel(new FileSystemModel(new File(ruta)));
         tree1.addMouseListener(this);
@@ -90,6 +97,7 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         String path = validarPath();
 
         if (e.getSource() == nuevaNota) {
+            gestorArchivos.editar(nota(path), " ");
             this.tree1.updateUI();
         }
 
@@ -150,10 +158,21 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         if (e.getSource() == cerrarSesion) {
             gestorVentanas.ventanaInicio();
             this.setVisible(false);
+        }
 
+        if (e.getSource() == eliminarUsuario) {
+            int resp = JOptionPane.showConfirmDialog(null, "Esta seguro de eliminar el Usuario");
+            if (resp == 0) {
+                gestorArchivos.eliminarCarpeta(ruta);
+                gestorArchivos.borrarLinea(usuario, "src/main/resources/Usuarios/usuarios.txt");
+                JOptionPane.showMessageDialog(null, "Usuario eliminado");
+                gestorVentanas.ventanaInicio();
+                this.setVisible(false);
+            }
         }
 
     }
+
 
     private String nota(String path) {
         try {

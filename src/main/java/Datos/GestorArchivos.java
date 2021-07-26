@@ -50,9 +50,13 @@ public class GestorArchivos {
 
     public void eliminarCarpeta(String donde) {
         File carpeta = new File(donde);
-        File[] archivos = carpeta.listFiles();
-        for (int i = 0; i < archivos.length; i++) {
-            eliminarArchivos(archivos[i].getPath());
+        try {
+            File[] archivos = carpeta.listFiles();
+            for (int i = 0; i < archivos.length; i++) {
+                eliminarArchivos(archivos[i].getPath());
+            }
+        }catch (NullPointerException e){
+
         }
         carpeta.delete();
     }
@@ -90,6 +94,38 @@ public class GestorArchivos {
             while ((linea = br.readLine()) != null) {
                 cont++;
                 if (cont != numero) {
+                    if (texto.equals("")) {
+                        texto = linea;
+                    } else {
+                        texto = texto + "\n" + linea;
+                    }
+
+                }
+            }
+            eliminarArchivos(ruta);
+            crearArchivo(ruta, " ");
+            editar(ruta, texto);
+
+            br.close();
+            fr.close();
+        } catch (Exception e) {
+            System.err.println("No se puede eliminar la linea");
+        }
+
+
+    }
+
+    public void borrarLinea(String usr, String ruta) {
+        String texto = "";
+        Path path = Paths.get(ruta);
+        try {
+
+            FileReader fr = new FileReader(String.valueOf(path));
+            BufferedReader br = new BufferedReader(fr);
+            String linea;
+            int cont = 0;
+            while ((linea = br.readLine()) != null) {
+                if (!linea.contains(usr)) {
                     if (texto.equals("")) {
                         texto = linea;
                     } else {
