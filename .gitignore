@@ -3,8 +3,8 @@
 *.jar
 *.war
 *.ear
-.nar
-hs_err_pid
+*.nar
+hs_err_pid*
 target/
 pom.xml.tag
 pom.xml.releaseBackup
