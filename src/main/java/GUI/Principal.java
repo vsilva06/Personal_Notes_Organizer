@@ -3,7 +3,6 @@ package GUI;
 import Complementos.FileSystemModel;
 import Datos.GestorArchivos;
 import Datos.GestorVentanas;
-import Estructura.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +37,6 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         setLocationRelativeTo(null);
         this.setIconImage(logo.getImage());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        // setResizable(false);
         pack();
         setVisible(true);
 
@@ -214,16 +212,18 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
             path = path.substring(0, path.indexOf(","));
 
         }
-        if (aux.contains(",")) {
+        while (aux.contains(",")) {
             aux = aux.substring(0, aux.indexOf(",")) + "\\" + aux.substring(aux.indexOf(",") + 2);
         }
 
         if (path.equals(aux)) {
+            System.out.println(path);
             return path;
+
         } else {
             path = path + "\\" + aux;
         }
-
+        System.out.println(path);
         return path;
     }
 
