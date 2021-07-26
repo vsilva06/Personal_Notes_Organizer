@@ -18,8 +18,7 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
     private JTree tree1;
     private JMenuBar menuBar1;
     private JMenu opcionesMenu;
-    private JMenuItem nuevaCarpeta, eliminarCarpeta, nuevaNota, eliminarNota, lCompra;
-    private TextEditor textEditor;
+    private JMenuItem nuevaCarpeta, eliminarCarpeta, nuevaNota, eliminarNota, lCompra, cerrarSesion;
     private GestorArchivos gestorArchivos;
     private String ruta;
     private GestorVentanas gestorVentanas;
@@ -71,6 +70,10 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         lCompra = new JMenuItem("Lista de compra");
         lCompra.addActionListener(this);
         opcionesMenu.add(lCompra);
+
+        cerrarSesion = new JMenuItem("Cerrar Sesion");
+        cerrarSesion.addActionListener(this);
+        opcionesMenu.add(cerrarSesion);
 
 
         tree1.setModel(new FileSystemModel(new File(ruta)));
@@ -142,6 +145,11 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
             String aux = "Producto" + " " + "Precio" + " ;";
             gestorArchivos.editar(n, aux);
             this.tree1.updateUI();
+
+        }
+        if (e.getSource() == cerrarSesion) {
+            gestorVentanas.ventanaInicio();
+            this.setVisible(false);
 
         }
 
