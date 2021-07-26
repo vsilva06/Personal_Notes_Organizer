@@ -214,16 +214,15 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         }
         while (aux.contains(",")) {
             aux = aux.substring(0, aux.indexOf(",")) + "\\" + aux.substring(aux.indexOf(",") + 2);
+
         }
 
         if (path.equals(aux)) {
-            System.out.println(path);
             return path;
 
         } else {
             path = path + "\\" + aux;
         }
-        System.out.println(path);
         return path;
     }
 
