@@ -26,11 +26,11 @@ public class GestorVentanas {
         this.principal = new Principal(s);
     }
 
-    public void abrirListaCompra(String path){
+    public void abrirListaCompra(String path) {
         this.listaCompra = new ListaCompra(path);
     }
 
-    public void abrirTextEditor(String path){
+    public void abrirTextEditor(String path) {
         textEditor = new TextEditor(path);
         textEditor.abrirArchivo();
     }

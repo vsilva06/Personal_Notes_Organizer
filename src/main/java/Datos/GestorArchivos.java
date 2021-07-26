@@ -23,50 +23,16 @@ public class GestorArchivos {
         }
     }
 
-
-    public void crearArchivo(String donde) {
-        FileWriter fw = null;
-        BufferedWriter bw = null;
-
-        try {
-            String ruta = donde + ".txt";
-            File file = new File(ruta);
-            // Si el archivo no existe es creado
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            fw = new FileWriter(file.getAbsoluteFile(), true);
-            bw = new BufferedWriter(fw);
-
-            bw.write("");
-
-        } catch (Exception e) {
-            //e.printStackTrace();
-            System.err.println("La ruta especificada no es correcta");
-
-        } finally {
-            try {
-                //Cierra instancias de FileWriter y BufferedWriter
-                if (bw != null)
-                    bw.close();
-                if (fw != null)
-                    fw.close();
-            } catch (IOException ex) {
-
-            }
-        }
-    }
-
     public boolean crearArchivo(String ruta, String texto) {
         Path archivo = Paths.get(ruta);
-            try {
-                Files.write(archivo, texto.getBytes());
-                System.out.println("Se ha guardado en el archivo");
-                return true;
-            } catch (IOException e) {
-                System.out.println("El archivo no puede ser guardado");
-                return false;
-            }
+        try {
+            Files.write(archivo, texto.getBytes());
+            System.out.println("Se ha guardado en el archivo");
+            return true;
+        } catch (IOException e) {
+            System.out.println("El archivo no puede ser guardado");
+            return false;
+        }
 
     }
 
@@ -92,11 +58,11 @@ public class GestorArchivos {
     }
 
     public void editar(String ruta, String texto) {
-        String texto1 = verArchivo(ruta) ;
-        if(texto1.equals(" ")){
-            crearArchivo(ruta,texto);
-        }else {
-            crearArchivo(ruta, texto1+"\n" + texto);
+        String texto1 = verArchivo(ruta);
+        if (texto1.equals(" ")) {
+            crearArchivo(ruta, texto);
+        } else {
+            crearArchivo(ruta, texto1 + "\n" + texto);
         }
     }
 
@@ -110,6 +76,39 @@ public class GestorArchivos {
             System.out.println("El archivo no puede ser leido");
         }
         return texto;
+    }
+
+    public void borrarLinea(int numero, String ruta) {
+        String texto = "";
+        Path path = Paths.get(ruta);
+        try {
+
+            FileReader fr = new FileReader(String.valueOf(path));
+            BufferedReader br = new BufferedReader(fr);
+            String linea;
+            int cont = 0;
+            while ((linea = br.readLine()) != null) {
+                cont++;
+                if (cont != numero) {
+                    if (texto.equals("")) {
+                        texto = linea;
+                    } else {
+                        texto = texto + "\n" + linea;
+                    }
+
+                }
+            }
+            eliminarArchivos(ruta);
+            crearArchivo(ruta, " ");
+            editar(ruta, texto);
+
+            br.close();
+            fr.close();
+        } catch (Exception e) {
+            System.err.println("No se puede eliminar la linea");
+        }
+
+
     }
 
 

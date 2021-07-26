@@ -1,8 +1,1 @@
-Producto Precio ;
-eq 234 ;
-weq 123 ;
-producto1 283 ;
-lkasd 1239 ;
-skajdña 10938710923 ;
-ksd 1293 ;
 qwe 1231 ;

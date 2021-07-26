@@ -4,7 +4,6 @@ import Complementos.Calculadora;
 import Datos.GestorArchivos;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -26,6 +25,10 @@ public class ListaCompra extends JFrame implements KeyListener {
         this.path = path;
         this.textProducto.addKeyListener(this);
         this.textPrecio.addKeyListener(this);
+        this.precio.addKeyListener(this);
+        this.producto.addKeyListener(this);
+        this.model1 = new DefaultListModel();
+        this.model2 = new DefaultListModel();
         ImageIcon logo = new ImageIcon("src/main/resources/Logo/Logo.png");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setTitle("PNO Lista compra");
@@ -38,24 +41,26 @@ public class ListaCompra extends JFrame implements KeyListener {
         setVisible(true);
         this.gestorArchivos = new GestorArchivos();
         abrirArchivo();
-        precio.addListSelectionListener((ListSelectionListener) this);
 
 
     }
 
     private void abrirArchivo() {
-        producto.removeAll();
-        precio.removeAll();
-        this.model1 = new DefaultListModel();
-        this.model2 = new DefaultListModel();
+
+        this.model1.removeAllElements();
+        this.model2.removeAllElements();
+        this.producto.removeAll();
+        this.precio.removeAll();
+
+
         String contenido = this.gestorArchivos.verArchivo(path);
 
         String[] lineas = contenido.split(" ;");
         for (String linea : lineas) {
             String[] credenciales = linea.split(" ");
 
-                this.model1.addElement(credenciales[0]);
-                this.model2.addElement(credenciales[1]);
+            model1.addElement(credenciales[0]);
+            model2.addElement(credenciales[1]);
 
         }
         model1.remove(0);
@@ -70,7 +75,8 @@ public class ListaCompra extends JFrame implements KeyListener {
         calculadora = new Calculadora();
         double[] numeros = new double[precio.getModel().getSize()];
         for (int i = 0; i < precio.getModel().getSize(); i++) {
-            numeros[i] = Double.parseDouble(String.valueOf(precio.getModel().getElementAt(i)));
+            double aux = Double.parseDouble(String.valueOf(precio.getModel().getElementAt(i)));
+            numeros[i] = aux;
         }
         textTotal.setText(String.valueOf(calculadora.sumarTotal(numeros)));
 
@@ -144,21 +150,32 @@ public class ListaCompra extends JFrame implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            System.out.println("hola");
+
             if (!textProducto.getText().equals("") && !textPrecio.getText().equals("")) {
                 if (textPrecio.getText().matches("[0-9]+")) {
                     gestorArchivos.editar(path, textProducto.getText() + " " + textPrecio.getText() + " ;");
                     textPrecio.setText("");
                     textProducto.setText("");
-                    abrirArchivo();
                 }
+                textPrecio.setText("");
+                textProducto.setText("");
+                abrirArchivo();
             }
-            textPrecio.setText("");
-            textProducto.setText("");
-            abrirArchivo();
+
         }
 
+        if (e.getKeyCode() == 127) {
+
+            int n = producto.getSelectedIndex();
+            model2.remove(n);
+            model1.remove(n);
+            gestorArchivos.borrarLinea(n + 2, path);
+
+            abrirArchivo();
+
+        }
     }
+
 
     @Override
     public void keyReleased(KeyEvent e) {
