@@ -38,7 +38,7 @@ public class GestorArchivos {
             fw = new FileWriter(file.getAbsoluteFile(), true);
             bw = new BufferedWriter(fw);
 
-            bw.write(" ");
+            bw.write("");
 
         } catch (Exception e) {
             //e.printStackTrace();
@@ -59,14 +59,15 @@ public class GestorArchivos {
 
     public boolean crearArchivo(String ruta, String texto) {
         Path archivo = Paths.get(ruta);
-        try {
-            Files.write(archivo, texto.getBytes());
-            System.out.println("Se ha guardado en el archivo");
-            return true;
-        } catch (IOException e) {
-            System.out.println("El archivo no puede ser guardado");
-            return false;
-        }
+            try {
+                Files.write(archivo, texto.getBytes());
+                System.out.println("Se ha guardado en el archivo");
+                return true;
+            } catch (IOException e) {
+                System.out.println("El archivo no puede ser guardado");
+                return false;
+            }
+
     }
 
 
@@ -92,7 +93,11 @@ public class GestorArchivos {
 
     public void editar(String ruta, String texto) {
         String texto1 = verArchivo(ruta) ;
-        crearArchivo(ruta, texto1 + texto);
+        if(texto1.equals(" ")){
+            crearArchivo(ruta,texto);
+        }else {
+            crearArchivo(ruta, texto1+"\n" + texto);
+        }
     }
 
     public String verArchivo(String ruta) {

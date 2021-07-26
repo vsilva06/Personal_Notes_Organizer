@@ -1,50 +1,79 @@
 package GUI;
 
-import Datos.GestorCuentas;
+import Complementos.Calculadora;
+import Datos.GestorArchivos;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Arrays;
 
-public class ListaCompra extends JFrame {
-    private JTextField textField1;
-    private JTextField textField2;
+public class ListaCompra extends JFrame implements KeyListener {
+    private JTextField textProducto;
+    private JTextField textPrecio;
     private JList producto;
-    private JTextField textField3;
+    private JTextField textTotal;
     private JList precio;
     private JPanel compra;
     private String path;
     private DefaultListModel model1;
     private DefaultListModel model2;
+    private GestorArchivos gestorArchivos;
+    private Calculadora calculadora;
 
     public ListaCompra(String path) {
         this.path = path;
+        this.textProducto.addKeyListener(this);
+        this.textPrecio.addKeyListener(this);
         ImageIcon logo = new ImageIcon("src/main/resources/Logo/Logo.png");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setTitle("PNO Lista compra");
         this.add(compra);
-        abrirArchivo();
         setSize(400, 500);
         setLocationRelativeTo(null);
         this.setIconImage(logo.getImage());
         setResizable(false);
         pack();
         setVisible(true);
+        this.gestorArchivos = new GestorArchivos();
+        abrirArchivo();
+
 
     }
 
     private void abrirArchivo() {
+        producto.removeAll();
+        precio.removeAll();
         this.model1 = new DefaultListModel();
         this.model2 = new DefaultListModel();
-        String contenido = new GestorCuentas().verArchivo(path);
-        String[] lineas = contenido.split(";");
+        String contenido = this.gestorArchivos.verArchivo(path);
+
+        String[] lineas = contenido.split(" ;");
         for (String linea : lineas) {
             String[] credenciales = linea.split(" ");
-            this.model1.addElement(credenciales[0]);
-            this.model2.addElement(credenciales[1]);
+
+                this.model1.addElement(credenciales[0]);
+                this.model2.addElement(credenciales[1]);
+
         }
+        model1.remove(0);
+        model2.remove(0);
 
         producto.setModel(model1);
         precio.setModel(model2);
+        sumarTotal();
+    }
+
+    private void sumarTotal() {
+        calculadora = new Calculadora();
+        double[] numeros = new double[precio.getModel().getSize()];
+        for (int i = 0; i < precio.getModel().getSize(); i++) {
+            numeros[i] = Double.parseDouble(String.valueOf(precio.getModel().getElementAt(i)));
+        }
+        textTotal.setText(String.valueOf(calculadora.sumarTotal(numeros)));
+
+
     }
 
     {
@@ -74,21 +103,22 @@ public class ListaCompra extends JFrame {
         compra.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
         compra.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(1, 10, 1, 5, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        textField1 = new JTextField();
-        compra.add(textField1, new com.intellij.uiDesigner.core.GridConstraints(1, 3, 1, 7, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        textProducto = new JTextField();
+        compra.add(textProducto, new com.intellij.uiDesigner.core.GridConstraints(1, 3, 1, 7, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label2 = new JLabel();
         label2.setText("Precio");
         compra.add(label2, new com.intellij.uiDesigner.core.GridConstraints(2, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        textField2 = new JTextField();
-        compra.add(textField2, new com.intellij.uiDesigner.core.GridConstraints(2, 3, 1, 7, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        textPrecio = new JTextField();
+        compra.add(textPrecio, new com.intellij.uiDesigner.core.GridConstraints(2, 3, 1, 7, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer4 = new com.intellij.uiDesigner.core.Spacer();
         compra.add(spacer4, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         producto = new JList();
         final DefaultListModel defaultListModel1 = new DefaultListModel();
         producto.setModel(defaultListModel1);
         compra.add(producto, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
-        textField3 = new JTextField();
-        compra.add(textField3, new com.intellij.uiDesigner.core.GridConstraints(4, 2, 1, 9, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        textTotal = new JTextField();
+        textTotal.setEditable(false);
+        compra.add(textTotal, new com.intellij.uiDesigner.core.GridConstraints(4, 2, 1, 9, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label3 = new JLabel();
         label3.setText("Total");
         compra.add(label3, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -105,4 +135,31 @@ public class ListaCompra extends JFrame {
         return compra;
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            System.out.println("hola");
+            if (!textProducto.getText().equals("") && !textPrecio.getText().equals("")) {
+                if (textPrecio.getText().matches("[0-9]+")) {
+                    gestorArchivos.editar(path, textProducto.getText() + " " + textPrecio.getText() + " ;");
+                    textPrecio.setText("");
+                    textProducto.setText("");
+                    abrirArchivo();
+                }
+            }
+            textPrecio.setText("");
+            textProducto.setText("");
+            abrirArchivo();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
 }

@@ -87,7 +87,6 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         String path = validarPath();
 
         if (e.getSource() == nuevaNota) {
-            nota(path);
             this.tree1.updateUI();
         }
 
@@ -141,7 +140,7 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         if (e.getSource() == lCompra) {
             String n = nota(path);
             String aux = "Producto" + " " + "Precio" + " ;";
-            gestorArchivos.editar(path + "\\" + n + ".txt", aux);
+            gestorArchivos.editar(n, aux);
             this.tree1.updateUI();
 
         }
@@ -153,8 +152,8 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
             File file = new File(path);
             if (!file.isFile()) {
                 String mensaje = JOptionPane.showInputDialog("Nombre nota");
-                gestorArchivos.crearArchivo(file.getPath() + "\\" + mensaje);
-                return mensaje.toString();
+                gestorArchivos.crearArchivo(file.getPath() + "\\" + mensaje + ".txt", " ");
+                return path + "\\" + mensaje.toString() + ".txt";
             }
 
 
@@ -193,6 +192,15 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
         }
 
         return path;
+    }
+
+    private boolean validarNota(File file) {
+        String contenido = this.gestorArchivos.verArchivo(file.getPath());
+
+        if (contenido.contains("Precio") && contenido.contains("Producto")) {
+            return true;
+        }
+        return false;
     }
 
 
@@ -236,28 +244,20 @@ public class Principal extends JFrame implements ActionListener, MouseListener {
      */
     @Override
     public void mouseClicked(MouseEvent e) {
+
         String path = validarPath();
         File file = new File(path);
         if (file.isFile()) {
             if (validarNota(file)) {
-                gestorVentanas.abrirListaCompra(path);
+                gestorVentanas.abrirListaCompra(file.getPath());
 
             } else {
-                gestorVentanas.abrirTextEditor(path);
+                gestorVentanas.abrirTextEditor(file.getPath());
             }
-
         }
 
     }
 
-    private boolean validarNota(File file) {
-        String contenido = gestorArchivos.verArchivo(file.getPath());
-
-        if (contenido.contains("Precio") && contenido.contains("Producto")) {
-            return true;
-        }
-        return false;
-    }
 
     public void mousePressed(MouseEvent e) {
 

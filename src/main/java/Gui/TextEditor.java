@@ -12,18 +12,18 @@ import java.util.Scanner;
 
 public class TextEditor extends JFrame implements ActionListener{
 
-    JTextArea textArea;
-    JScrollPane scrollPane;
-    JLabel fontLabel;
-    JSpinner fontSizeSpinner;
-    JButton fontColorButton;
-    JComboBox<String> fontBox;
+    private JTextArea textArea;
+    private JScrollPane scrollPane;
+    private JLabel fontLabel;
+    private JSpinner fontSizeSpinner;
+    private JButton fontColorButton;
+    private JComboBox<String> fontBox;
 
-    JMenuBar menuBar;
-    JMenu fileMenu;
-    JMenuItem abrirItem;
-    JMenuItem guardarItem;
-    JMenuItem salirItem;
+    private JMenuBar menuBar;
+    private JMenu fileMenu;
+    private JMenuItem abrirItem;
+    private JMenuItem guardarItem;
+    private JMenuItem salirItem;
     private String path;
 
     public TextEditor(String path){
