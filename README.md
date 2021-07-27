@@ -11,7 +11,7 @@ P.N.O
 
 ## UML
 
-![Personal_Notes_Organizer](src/main/resources/UML/Class Diagram1.jpg)
+![Personal_Notes_Organizer](src/main/resources/UML/ClassDiagram1.jpg)
 
 
 
