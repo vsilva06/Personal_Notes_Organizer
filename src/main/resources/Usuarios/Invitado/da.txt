@@ -1,0 +1,4 @@
+Producto Precio ;
+producto1 1000 ;
+producto2 2000 ;
+producto3 500 ;
