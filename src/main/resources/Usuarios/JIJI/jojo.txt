@@ -1,0 +1,3 @@
+Producto Precio ;
+jabon 1000 ;
+pene 8695 ;

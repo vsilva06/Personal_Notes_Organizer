@@ -42,14 +42,12 @@ public class Inicio extends JFrame implements ActionListener, MouseListener {
 
     }
 
-
     private void añadirButton() {
         crearUsuarioButton.addActionListener(this);
         entrarButton.addActionListener(this);
         iniciarSinSesionButton.addActionListener(this);
 
     }
-
 
     private void agregarbox() {
         comboBox1.addActionListener(this);
@@ -72,25 +70,22 @@ public class Inicio extends JFrame implements ActionListener, MouseListener {
 
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == crearUsuarioButton) {
             CrearUsuario cu = new CrearUsuario();
             this.comboBox1.updateUI();
-
-
         }
+
         if (e.getSource() == entrarButton) {
             Login log = new Login();
             if (log.login(comboBox1.getSelectedItem().toString(), passwordField1.getText().hashCode())) {
                 gestorVentanas.ventanaPrincipal(String.valueOf(comboBox1.getSelectedItem()));
                 this.setVisible(false);
             }
-
-
         }
+
         if (e.getSource() == iniciarSinSesionButton) {
             Usuario invitado = new Usuario();
             invitado.crearCuenta("Invitado", "");
